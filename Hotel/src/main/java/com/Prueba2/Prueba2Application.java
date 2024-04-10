@@ -1,13 +1,13 @@
-package com.Practica5;
+package com.Prueba2;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Practica5Application {
+public class Prueba2Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Practica5Application.class, args);
+		SpringApplication.run(Prueba2Application.class, args);
 	}
 
 }

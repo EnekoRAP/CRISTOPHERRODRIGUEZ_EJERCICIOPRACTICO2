@@ -1,4 +1,4 @@
-package com.Practica5;
+package com.Prueba2;
 
 import java.util.Locale;
 import org.springframework.context.MessageSource;
