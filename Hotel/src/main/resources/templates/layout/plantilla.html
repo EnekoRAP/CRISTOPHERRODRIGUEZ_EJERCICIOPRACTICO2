@@ -22,20 +22,20 @@
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                        <ul class="navbar-nav"sec:authorize="hasRole('ROLE_ADMIN')">
-                            <li class="nav-item px-2"><a class="nav-menu-link nav-link" th:href="@{/vuelos/listado}">[[#{plantilla.vuelos}]]</a></li>
-                            <li class="nav-item px-2"><a class="nav-menu-link nav-link" th:href="@{/prereservas/listado}">[[#{plantilla.prereservas}]]</a></li>
-                            <li class="nav-item px-2"><a class="nav-menu-link nav-link" th:href="@{/reservas/listado}">[[#{plantilla.reservas}]]</a></li>
+                        <ul class="navbar-nav"sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_CLTE')">
+                            <li class="nav-item px-2"><a class="nav-menu-link nav-link" th:href="@{/vuelos/listado}">[[#{plantilla.hoteles}]]</a></li>
+                            <li class="nav-item px-2"><a class="nav-menu-link nav-link" th:href="@{/prereservas/listado}">[[#{plantilla.reservas}]]</a></li>
+                            <li class="nav-item px-2"><a class="nav-menu-link nav-link" th:href="@{/reservas/listado}">[[#{plantilla.empleados}]]</a></li>
                             <li class="nav-item dropdown"sec:authorize="hasRole('ROLE_ADMIN')">
                                 <a class="nav-link dropdown-toggle" 
                                    data-bs-toggle="dropdown" 
                                    href="#" 
                                    role="button" 
                                    aria-expanded="false">[[#{plantilla.pruebas}]]</a>
-                                <ul class="dropdown-menu dropdown-menu-dark">
+                                <ul class="dropdown-menu dropdown-menu-dark" sec:authorize="hasRole('ROLE_ADMIN')">
+                                    <li><a class="dropdown-item"  th:href="@{/clientes/listado}">[[#{plantilla.usuarios}]]</a></li>
                                     <li><a class="dropdown-item"  th:href="@{/pruebas/listado}">[[#{plantilla.asociaciones}]]</a></li>
                                     <li><a class="dropdown-item"  th:href="@{/pruebas/listado2}">[[#{plantilla.consultas}]]</a></li>
-                                    <li><a class="dropdown-item"  th:href="@{/clientes/listado}">[[#{plantilla.clientes}]]</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -75,21 +75,21 @@
                     <div class="col-lg-4">
                         <section th:fragment="section1">
                             <div class="ratio ratio-16x9">
-                                <iframe src="https://youtu.be/w6c2X2s7PcI?si=1LSl3FZh7InhaowN" title="Cartagena Video" allowfullscreen></iframe>
+                                <iframe src="https://youtu.be/0LS-WIgKbrs?si=EsKp4xzT7ssglJr9" title="Hotel Conchal Video" allowfullscreen></iframe>
                             </div>
                         </section>
                     </div>
                     <div class="col-lg-4">
                         <section th:fragment="section2">
                             <div class="ratio ratio-16x9">
-                                <iframe src="https://youtu.be/vn7-DWSaBZE?si=EaiRZq6rFUjYX305" title="Argentina Video" allowfullscreen></iframe>
+                                <iframe src="https://youtu.be/qU73ghukcuI?si=6ByhovqvnFu7HMJ2" title="Hotel Avellanas Video" allowfullscreen></iframe>
                             </div>
                         </section>
                     </div>
                     <div class="col-lg-4">
                         <section th:fragment="section3">
                             <div class="ratio ratio-16x9">
-                                <iframe src="https://youtu.be/-vUgUbOrYXU?si=82evdNAP6jmWstlP" title="Irlanda Video" allowfullscreen></iframe>
+                                <iframe src="https://youtu.be/Ap_eL-60A5M?si=FUVD3le6WCO0eXtu" title="Hotel Gregorio Video" allowfullscreen></iframe>
                             </div>
                         </section>
                     </div>
