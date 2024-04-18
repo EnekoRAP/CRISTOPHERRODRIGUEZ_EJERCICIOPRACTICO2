@@ -1,19 +1,14 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-    
     <head th:replace="~{layout/plantilla :: head}">
         <title>Hoteles Guanacastecos</title>
     </head>
-    
     <body>
         <header th:replace="~{layout/plantilla :: header}"/>
-
-        <section th:replace="~{hoteles/fragmentos :: botonesAgregar}"/>
-        <section th:replace="~{hoteles/fragmentos :: agregarHoteles}"/> 
-        <section th:replace="~{hoteles/fragmentos :: listadoHoteles}"/>
-
+        <section th:replace="~{hoteles/fragmentos :: BotonAgregar}"/>
+        <section th:replace="~{hoteles/fragmentos :: ModalAgregar}"/> 
+        <section th:replace="~{hoteles/fragmentos :: ListadoHoteles}"/>
         <footer th:replace="~{layout/plantilla :: footer}"/>      
     </body>
-    
 </html>

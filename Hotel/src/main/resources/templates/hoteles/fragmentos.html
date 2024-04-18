@@ -2,32 +2,27 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
-    
     <head th:replace="~{layout/plantilla :: head}">
         <title>Hoteles Guanacastecos</title>
     </head>
-    
     <body>
-        <!-- 1 Sección para crear el boton de agregar... llamará a una ventana modal-->
-        <section th:fragment="botonesAgregar" class="py-4 mb-4 bg-light">
-            <div class="container" sec:authorize="hasRole('ROLE_ADMIN')">
+        <section th:fragment="BotonAgregar" class="py-4 mb-4">
+            <div class="container" >
                 <div class="row">
                     <div class="col-md-3">   
                         <button 
                             type="button" 
                             class="btn btn-primary btn-block" 
                             data-bs-toggle="modal" 
-                            data-bs-target="#agregarVuelo">
-                            <i class="fas fa-plus"></i> [[#{hotel.agregar}]]
+                            data-bs-target="#ModalAgregar">
+                            <i class="fas fa-plus"></i>
                         </button>
                     </div>
                 </div>
             </div>
         </section>
-
-        <!-- 2 Fragmento para agregar categoria, es la ventana modal -->
-        <section th:fragment="agregarVuelo">
-            <div id="agregarVuelo" 
+        <section th:fragment="ModalAgregar">
+            <div id="ModalAgregar" 
                  class="modal fade" 
                  tabindex="-1" 
                  aria-labelledby="exampleModalLabel" 
@@ -35,23 +30,23 @@
                 <div class="modal-dialog modal-md">
                     <div class="modal-content">
                         <div class="modal-header bg-info text-white">
-                            <h5 class="modal-title">[[#{hoteles.agregar}]]</h5>
+                            <h5 class="modal-title">Agregar</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div> 
-                        <form th:action="@{/vuelo/guardar}" th:object="${vuelos}"
+                        <form th:action="@{/hoteles/guardar}" th:object="${hotel}"
                               method="POST" class="was-validated" enctype="multipart/form-data">
                             <div class="modal-body">
                                 <div class="mb-3">
-                                    <label for="descripcion">[[#{hoteles.descripcion}]]</label>
-                                    <input type="text" class="form-control" name="descripcion" required="true"/>
+                                    <label for="nombre">Nombre: </label>
+                                    <input type="text" class="form-control" name="nombre" required="true"/>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="activo">[[#{hoteles.activo}]]</label>
-                                    <input class="form-check-input" type="checkbox" name="activo" id="activo"/>
+                                    <label for="ubicacion">Ubicacion: </label>
+                                    <input class="form-control"  type="text" name="ubicacion" id="ubicacion" required="true"/>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="rutaVuelo">[[#{vuelos.rutas}]]</label>
-                                    <input class="form-control" type="text" id="rutaVuelo" name="rutaVuelo" value="${vuelos.rutaVuelo}" />
+                                    <label for="descripcion">Descripcion: </label>
+                                    <input class="form-control"  type="text" name="descripcion" id="descripcion" required="true"/>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -62,100 +57,92 @@
                 </div>
             </div>
         </section>
-
-        <!-- 3 Sección principal para mostrar la informaccion de la entidad categoria -->
-        <section th:fragment="listadoVuelos" id="vuelos">
+        <section th:fragment="ListadoHoteles" id="hoteles">
             <div class="container">
                 <div class="row">
                     <div class="col-md-9">
                         <div class="card">
                             <div class="card-header">
-                                <h4>[[#{vuelos.listado}]]</h4>
+                                <h4>Listado de Hoteles</h4>
                             </div>
-                            <div th:if="${vuelos != null and !vuelos.empty}">
+                            <div th:if="${hoteles != null and !hoteles.empty}">
                                 <table class="table table-striped table-hover">
                                     <thead class="table-dark">
-                                        <tr><th>#</th>
-                                            <th>[[#{vuelos.descripcion}]]</th>
-                                            <th>[[#{vuelos.activo}]]</th>
-                                            <th></th></tr>
+                                        <tr>
+                                            <th>#</th>
+                                            <th class="text-center">Nombre</th>
+                                            <th class="text-center">Ubicacion</th>
+                                            <th class="text-center">Descripcion</th>
+                                            <th></th><th></th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="vuelos, contador : ${vuelos}">
-                                            <td>[[${contador.count}]]</td>
-                                            <td>[[${vuelos.descripcion}]]</td>
-                                            <td th:text="${vuelos.activo} ? 'Activa' : 'Inactiva'" />
-                                            <td sec:authorize="hasRole('ROLE_ADMIN')" />
-                                            <td><a th:href="@{/vuelos/eliminar/}+${vuelos.idVuelo}"
+                                        <tr th:each="hotel, contador : ${hoteles}">
+                                            <td class="text-center">[[${contador.count}]]</td>
+                                            <td class="fs-6">[[${hotel.nombre}]]</td>
+                                            <td class="fs-6">[[${hotel.ubicacion}]]</td>
+                                            <td class="fs-6">[[${hotel.descripcion}]]</td>
+                                            <td>
+                                                <a th:href="@{/hoteles/eliminar/}+${hotel.id}"
                                                    class="btn btn-danger">
-                                                    <i class="fas fa-trash"></i> [[#{accion.eliminar}]]</a>
-                                                <a th:href="@{/vuelos/modificar/}+${vuelos.idVuelo}"
+                                                    <i class="fas fa-trash"></i> Eliminar</a>
+                                            </td>
+                                            <td>
+                                                <a th:href="@{/hoteles/modificar/}+${hotel.id}"
                                                    class="btn btn-success">
-                                                    <i class="fas fa-pencil"></i> [[#{accion.actualizar}]]</a></td></tr>
+                                                    <i class="fas fa-pencil"></i> Actualizar</a>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="text-center p-2" th:if="${vuelos == null or vuelos.empty}">
-                                <span>[[#{lista.vacia}]]</span>
+                            <div class="text-center p-2" th:if="${hoteles == null or hoteles.empty}">
+                                <span>No hay hoteles registrados</span>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="card text-center bg-success text-white mb-3">
-                            <div class="card-body">
-                                <h3>[[#{vuelos.total}]]</h3>
-                                <h4 class="fs-2"><i class="fas fa-users"></i> [[${totalVuelos}]]</h4>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </section>
-
-        <!-- 4 Fragmento que se utiliza en la página modifca.html -->
-        <section th:fragment="editarVuelo">
+        <section th:fragment="ModificarHotel">
             <div class="row">
-                <div class="col-md-2"></div>
                 <div class="col-md-8">
                     <form method="POST"
-                          th:action="@{/vuelos/guardar}" 
-                          th:object="${vuelos}"
+                          th:action="@{/hotel/guardar}" 
+                          th:object="${hotel}"
                           class="was-validated"                          
                           enctype="multipart/form-data">
-                        <input type="hidden" name="idVuelo" th:field="*{idVuelo}"/>
-                        <section th:replace="~{vuelos/fragmentos :: botonesEditar}"/>
+                        <input type="hidden" name="id" th:field="*{id}"/>
+                        <section th:replace="~{hoteles/fragmentos :: BotonesModificar}"/>
                         <div id=details>
                             <div class="container">
                                 <div class="row">
                                     <div class="col">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h4>[[#{accion.actualizar}]]</h4>
+                                                <h4>Modificar</h4>
                                             </div>
                                             <div class="card-body">
                                                 <div class="mb-3">
-                                                    <label for="descripcion">[[#{vuelos.descripcion}]]</label>
+                                                    <label for="nombre">Nombre</label>
+                                                    <input type="text" class="form-control" 
+                                                           name="nombre" th:field="*{nombre}"
+                                                           required="true">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="ubicacion">Ubicacion</label>
+                                                    <input type="text" class="form-control" 
+                                                           name="ubicacion" th:field="*{ubicacion}"
+                                                           required="true">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="descripcion">Descripcion</label>
                                                     <input type="text" class="form-control" 
                                                            name="descripcion" th:field="*{descripcion}"
                                                            required="true">
                                                 </div>
-                                                <div class="mb-3">
-                                                    <label for="activo">[[#{vuelos.activo}]]</label>
-                                                    <input class="form-check-input" 
-                                                           type="checkbox" 
-                                                           name="activo" 
-                                                           id="activo"
-                                                           th:field="*{activo}">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="rutaVuelo">[[#{vuelos.rutas}]]</label>
-                                                    <input class="form-control" 
-                                                           type="text" 
-                                                           id="rutaVuelo" 
-                                                           name="rutaVuelo" 
-                                                           value="${vuelos.rutaVuelo}" />
-                                                </div>
-
                                             </div>
                                         </div>
                                     </div>
@@ -165,30 +152,27 @@
                 </div>
             </div>
         </section>
-
-        <!-- 5 Fragmento que se utiliza en el fragmento anterior -->
-        <section th:fragment="botonesEditar">
-            <div class="container py-4 mb-4 bg-light">
+        <section th:fragment="BotonesModificar">
+            <div class="container py-4 mb-4">
                 <div class="row">
                     <div class="col-md-4 d-grid">
-                        <a th:href="@{/vuelos/listado}" class="btn btn-primary">
-                            <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+                        <a th:href="@{/hoteles/listado}" class="btn btn-primary">
+                            <i class="fas fa-arrow-left"></i>
                         </a>
                     </div>
                     <div class="col-md-4 d-grid">                                
-                        <a th:href="@{/vuelos/eliminar/}+${vuelos.idVuelo}"
+                        <a th:href="@{/hoteles/eliminar/}+${hotel.id}"
                            class="btn btn-danger">
-                            <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                            <i class="fas fa-trash"></i>
                         </a>
                     </div>
                     <div class="col-md-4 d-grid">
                         <button type="submit" class="btn btn-success">
-                            <i class="fas fa-check"></i> [[#{accion.guardar}]]
+                            <i class="fas fa-check"></i>
                         </button>
                     </div>
                 </div>
             </div>
         </section>
-        
     </body>
 </html>
