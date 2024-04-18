@@ -1,7 +1,6 @@
 package com.Prueba2.controller;
 
 import com.Prueba2.domain.Reservas;
-import com.Prueba2.service.HotelesService;
 import com.Prueba2.service.ReservasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,64 +8,47 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Controller
-@RequestMapping("/reservas")
+@RequestMapping("/reserva")
 public class ReservasController {
   
     @Autowired
-    private ReservasService reservasService;
-    @Autowired
-    private HotelesService hotelesService;
+    private ReservasService reservaService;
+    
     
     @GetMapping("/listado")
-    private String listado(Model model) {
-        var reservas = reservasService.getReservas(false);
-        model.addAttribute("reservas", reservas);
-        
-        var vuelos = hotelesService.getHoteles(false);
-        model.addAttribute("hoteles", hoteles);
-        
-        model.addAttribute("totalReservas",reservas.size());
-        return "/reservas/listado";
+    public String listado(Model model) {
+        var reservas = reservaService.getReservas();
+        model.addAttribute("reservas", reservas); 
+        return "reserva/listado"; 
     }
     
-     @GetMapping("/nuevo")
-    public String reservasNuevo(Reservas reservas) {
-        return "/reservas/modifica";
+     @GetMapping("/reserva")
+    public String reservaNuevo(Reservas reserva) {
+        return "/reserva/reserva";
     }
-    
+
     @PostMapping("/guardar")
-    public String reservasGuardar(Reservas reservas,
-            @RequestParam("idHotel") int idHotel,
-            @RequestParam("idEmpleado") int idEmpleado) {
-        if (idHotel != 0 && idEmpleado != 0) {
-            reservasService.save(reservas);
-            reservas.setIdHotel(idHotel, 
-                    reservas.getIdReserva());
-            reservas.setIdCliente(idEmpleado,
-                    reservas.getIdReserva());
-        }
-        reservasService.save(reservas);
-        return "redirect:/reservas/listado";
+    public String reservaGuardar(Reservas reserva) { 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        reserva.setIdUsuario(authentication.getName());
+        reservaService.save(reserva);
+        return "redirect:/mensaje";
     }
 
     @GetMapping("/eliminar/{idReserva}")
-    public String rereservasEliminar(Reservas reservas) {
-        reservasService.delete(reservas);
-        return "redirect:/reservas/listado";
+    public String reservaEliminar(Reservas reserva) {
+        reservaService.delete(reserva);
+        return "redirect:/reserva/listado";
     }
 
     @GetMapping("/modificar/{idReserva}")
-    public String reservasModificar(Reservas reservas, Model model) {
-        reservas = reservasService.getReserva(reservas);
-        model.addAttribute("reservas", reservas);
-        
-        var hoteles = hotelesService.getHoteles(false);
-        model.addAttribute("hoteles", hoteles);
-        
-        return "/rereservas/modifica";
+    public String reservaModificar(Reservas reserva, Model model) {
+        reserva = reservaService.getReserva(reserva);
+        model.addAttribute("reserva", reserva);
+        return "/reserva/modifica";
     }   
-    
 }

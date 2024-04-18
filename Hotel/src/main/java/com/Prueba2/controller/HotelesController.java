@@ -2,54 +2,50 @@ package com.Prueba2.controller;
 
 import com.Prueba2.domain.Hoteles;
 import com.Prueba2.service.HotelesService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/hoteles")
+@Slf4j
+@RequestMapping("/hotel")
 public class HotelesController {
     @Autowired
-    private HotelesService hotelesService;
-    
+    private HotelesService hotelService;
+
     @GetMapping("/listado")
-    private String listado(Model model) {
-        var hoteles = hotelesService.getHoteles(false);
-        model.addAttribute("vuelos", hoteles);
-        model.addAttribute("totalVuelos", hoteles.size());
-        return "/hoteles/listado";
+    public String inicio(Model model) {
+        var hoteles = hotelService.getHoteles();
+        model.addAttribute("hoteles", hoteles);
+        return "/hotel/listado";
     }
     
-     @GetMapping("/nuevo")
-    public String hotelesNuevo(Hoteles hoteles) {
-        return "/hoteles/modifica";
+    @GetMapping("/nuevo")
+    public String hotelNuevo(Hoteles hotel) {
+        return "/hotel/modifica";
     }
 
+    
     @PostMapping("/guardar")
-    public String hotelesGuardar(Hoteles hoteles,
-            @RequestParam("ubicacionHotel") String ubicacionHotel) {        
-        if (ubicacionHotel != null && !ubicacionHotel.isEmpty()) {
-            hotelesService.save(hoteles);
-            hoteles.setDescripcion(ubicacionHotel);
-        }
-        hotelesService.save(hoteles);
-        return "redirect:/hoteles/listado";
+    public String hotelGuardar(Hoteles hotel) {        
+        hotelService.save(hotel);
+        return "redirect:/hotel/listado";
     }
 
-    @GetMapping("/eliminar/{idHotel}")
-    public String hotelesEliminar(Hoteles hoteles) {
-        hotelesService.delete(hoteles);
-        return "redirect:/hoteles/listado";
+    @GetMapping("/eliminar/{id}")
+    public String hotelEliminar(Hoteles hotel) {
+        hotelService.delete(hotel);
+        return "redirect:/hotel/listado";
     }
 
-    @GetMapping("/modificar/{idHotel}")
-    public String hotelesModificar(Hoteles hoteles, Model model) {
-        hoteles = hotelesService.getHoteles(hoteles);
-        model.addAttribute("vuelos", hoteles);
-        return "/vuelos/modifica";
-    }   
+    @GetMapping("/modificar/{id}")
+    public String hotelModificar(Hoteles hotel, Model model) {
+        hotel = hotelService.getHotel(hotel);
+        model.addAttribute("hotel", hotel);
+        return "/hotel/modifica";
+    }
 }
