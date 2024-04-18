@@ -17,15 +17,15 @@ public class Reservas implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id_reservas")
-    private Long idReserva;
+    private Long id;
     
     //private Long idPreservas;  ya no se usa por el @manyToOne
     @NotEmpty
-    private int idHotel;
-    private int idCliente;
-    private DateTime fechaIngreso;
-    private DateTime fechaSalida;
-    private String numeroCedula;
+    private int hotel_id;
+    private String cliente_nombre;
+    private DateTime fecha_ingreso;
+    private DateTime fecha_salida;
+    private String numero_cedula;
 
     @ManyToOne
     @JoinColumn(name="id_hotel")
@@ -35,13 +35,13 @@ public class Reservas implements Serializable {
     public Reservas() {
     }
 
-    public Reservas(Long idReserva, int idHotel, int idCliente, DateTime fechaIngreso, DateTime fechaSalida, String numeroCedula) {
-        this.idReserva = idReserva;
-        this.idHotel = idHotel;
-        this.idCliente = idCliente;
-        this.fechaIngreso = fechaIngreso;
-        this.fechaSalida = fechaSalida;
-        this.numeroCedula = numeroCedula;
+    public Reservas(Long id, int hotel_id, String cliente_nombre, DateTime fecha_ingreso, DateTime fecha_salida, String numeroCedula) {
+        this.id = id;
+        this.hotel_id = hotel_id;
+        this.cliente_nombre = cliente_nombre;
+        this.fecha_ingreso = fecha_ingreso;
+        this.fecha_salida = fecha_salida;
+        this.numero_cedula = numero_cedula;
     }
 
     public void setIdHotel(int idHotel) {

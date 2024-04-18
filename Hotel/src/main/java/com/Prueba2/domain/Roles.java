@@ -19,15 +19,15 @@ public class Roles implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idRol;
+    private Long id_rol;
 
     @NotEmpty
     private String nombre;
 
     @Column(name = "id_usuario")
-    private String idUsuario;
+    private String id_usuario;
     
-    @Column(name = "id_cliente")
-    private String idCliente;
+    @Column(name = "id_empleado")
+    private String id_empleado;
     
 }

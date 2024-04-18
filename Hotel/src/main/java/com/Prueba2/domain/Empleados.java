@@ -21,17 +21,12 @@ public class Empleados implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idCliente;
+    private Long id;
 
     @NotEmpty
     private String nombre;
-    private String apellidos;
-    private String correo;
-    private String telefono;
-    private String nombreUsuario;
-    private String contrasena;
-    private int idRolCliente;
-    private boolean activo;
+    private String cargo;
+    private int hotel_id;
     
     @OneToMany
     @JoinColumn(name = "id_empleado")

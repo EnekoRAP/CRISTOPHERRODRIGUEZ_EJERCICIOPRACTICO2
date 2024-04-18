@@ -21,11 +21,10 @@ public class Usuarios implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idUsuario;
+    private Long username;
 
     @NotEmpty
-    private String usuario;
-    private String contraseña;
+    private String password;
     private boolean enabled;
     private String correo;
     

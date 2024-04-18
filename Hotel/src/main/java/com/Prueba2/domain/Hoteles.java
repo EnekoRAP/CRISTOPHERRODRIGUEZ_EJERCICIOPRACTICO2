@@ -19,7 +19,7 @@ public class Hoteles implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_hotel")
-    private Long idHotel;
+    private Long id;
     
     @NotEmpty
     private String nombreHotel;
@@ -33,8 +33,8 @@ public class Hoteles implements Serializable {
     public Hoteles() {
     }
 
-    public Hoteles(Long idHotel, String nombreHotel, String ubicacion, String descripcion) {
-        this.idHotel = idHotel;
+    public Hoteles(Long id, String nombreHotel, String ubicacion, String descripcion) {
+        this.id = id;
         this.nombreHotel = nombreHotel;
         this.ubicacion = ubicacion;
         this.descripcion = descripcion;
