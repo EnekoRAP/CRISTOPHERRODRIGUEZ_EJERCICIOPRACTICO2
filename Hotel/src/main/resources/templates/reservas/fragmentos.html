@@ -5,10 +5,8 @@
     <head th:replace="~{layout/plantilla :: head}">
         <title>Hoteles Guanacastecos</title>
     </head>
-    
     <body>
-        <!-- 1 Sección para crear el boton de agregar... llamará a una ventana modal-->
-        <section th:fragment="botonesAgregar" class="py-4 mb-4 bg-light">
+        <section th:fragment="botonesAgregarReserva" class="py-4 mb-4">
             <div class="container">
                 <div class="row">
                     <div class="col-md-3">   
@@ -16,237 +14,190 @@
                             type="button" 
                             class="btn btn-primary btn-block" 
                             data-bs-toggle="modal" 
-                            data-bs-target="#agregarPrereserva">
-                            <i class="fas fa-plus"></i> [[#{reserva.agregar}]]
+                            data-bs-target="#agregarReserva">
+                            <i class="fas fa-plus"></i> 
                         </button>
                     </div>
                 </div>
             </div>
         </section>
-
-        <!-- 2 Fragmento para agregar prereserva, es la ventana modal -->
-        <section th:fragment="agregarPrereserva">
-            <div id="agregarPrereserva" 
-                 class="modal fade" 
-                 tabindex="-1" 
-                 aria-labelledby="exampleModalLabel" 
-                 aria-hidden="true">
-                <div class="modal-dialog modal-md">
-                    <div class="modal-content">
-                        <div class="modal-header bg-info text-white">
-                            <h5 class="modal-title">[[#{reserva.agregar}]]</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div> 
-                        <form th:action="@{/rereservas/guardar}" th:object="${rereserva}"
-                              method="POST" class="was-validated" enctype="multipart/form-data">
-
-                            <input type="hidden" name="nuevaInfo" value="NO"/>
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <label for="id">[[#{reserva.id}]]</label>
-                                    <input type="text" class="form-control" name="id" required="true"/>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="idHotel">[[#{reserva.cliente.nombre}]]</label>
-                                    <select name="cliente.clienteNombre" 
-                                            class="form-select" 
-                                            aria-label="Default select example">
-                                        <option th:each="v : ${clientes}" th:value="${c.clienteNombre}" th:text="${c.descripcion}">
-                                        </option>
-                                    </select>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="cliente">[[#{reserva.id.empleado}]]</label>                                    
-                                    <input type="text" class="form-control" name="empleado" required="true"/>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="datos">[[#{reserva.datos}]]</label>                                    
-                                    <input type="number" class="form-control" name="datos" required="true"/>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="total">[[#{reserva.total}]]</label>                                    
-                                    <input type="number" class="form-control" name="total" required="true"/>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="activo">[[#{reserva.activo}]]</label>
-                                    <input class="form-check-input" 
-                                           type="checkbox" 
-                                           name="activo" 
-                                           id="activo">
-                                </div>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button class="btn btn-primary" type="submit">Guardar</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3 Sección principal para mostrar la informaccion de la entidad prereserva -->
-        <section th:fragment="listadoPrereservas" id="prereservas">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-9">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>[[#{reserva.listado}]]</h4>
-                            </div>
-                            <div th:if="${prereservas != null and !prereservas.empty}">
-                                <table class="table table-striped table-hover">
-                                    <thead class="table-dark">
-                                        <tr><th>#</th>
-                                            <th class="text-center">[[#{reserva.id}]]</th>
-                                            <th class="text-center">[[#{reserva.cliente.nombre}]]</th>
-                                            <th class="text-center">[[#{reserva.num.huesped}]]</th>
-                                            <th class="text-center">[[#{reserva.fecha.ingreso}]]</th>
-                                            <th class="text-center">[[#{reserva.fecha.salida}]]</th>
-                                            <th class="text-center">[[#{reserva.numero.cedula}]]</th>
-                                            <th class="text-center">[[#{reserva.hotel.id}]]</th>
-                                            <th></th><th></th></tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr th:each="prereserva, contador : ${prereservas}">
-                                            <td class="text-center">[[${contador.count}]]</td>
-                                            <td class="fs-6">[[${reserva.id.vuelo}]]</td>
-                                            <td class="text-end">[[${reserva.id.cliente}]]</td>
-                                            <td class="text-center">[[${reserva.datos}]]</td>
-                                            <td class="text-end">[[${reserva.total}]]</td>
-                                            <td  class="text-center" th:text="${prereserva.activo} ? 'Activa' : 'Inactiva'" />
-                                            <td>[[${reserva.factura}]]</td>
-                                            <td><a th:href="@{/prereservas/eliminar/}+${prereserva.idPrereserva}"
-                                                   class="btn btn-danger">
-                                                    <i class="fas fa-trash"></i> [[#{accion.eliminar}]]</a></td>
-                                            <td>
-                                                <a th:href="@{/prereservas/modificar/}+${prereserva.idPrereserva}"
-                                                   class="btn btn-success">
-                                                    <i class="fas fa-pencil"></i> [[#{accion.actualizar}]]</a></td></tr>
-                                    </tbody>
-                                </table>
-
-                            </div>
-                            <div class="text-center p-2" th:if="${prereservas == null or prereservas.empty}">
-                                <span>[[#{lista.vacia}]]</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card text-center bg-success text-white mb-3">
-                            <div class="card-body">
-                                <h3>[[#{reserva.total}]]</h3>
-                                <h4 class="fs-2"><i class="fas fa-users"></i> [[${totalReservas}]]</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4 Fragmento que se utiliza en la página modifca.html -->
-        <section th:fragment="editarPrereserva">
+        <section th:fragment="AgregarReserva">
             <div class="row">
                 <div class="col-md-2"></div>
                 <div class="col-md-8">
                     <form method="POST"
-                          th:action="@{/prereservas/guardar}" 
-                          th:object="${prereserva}"
+                          th:action="@{/reserva/guardar}" 
+                          th:object="${reserva}"
                           class="was-validated"                          
                           enctype="multipart/form-data">
-                        <input type="hidden" name="idPrereserva" th:field="*{idPrereserva}"/>
-                        <input type="hidden" name="rutaImagen" th:field="*{rutaImagen}"/>
-                        <input type="hidden" name="nuevaImagen" value="NO"/>
-
-                        <section th:replace="~{prereserva/fragmentos :: botonesEditar}"/>
                         <div id=details>
                             <div class="container">
                                 <div class="row">
                                     <div class="col">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h4>[[#{accion.actualizar}]]</h4>
+                                                <h4>Agregar Reserva</h4>
                                             </div>
                                             <div class="card-body">
                                                 <div class="mb-3">
-                                                    <label for="idVuelo">[[#{reserva.id.vuelo}]]</label>
-                                                    <select th:field="*{vuelo.idVuelo}"
-                                                            class="form-select" 
-                                                            aria-label="Default select example">
-                                                        <option th:each="v : ${vuelos}" th:value="${v.idVuelo}" th:text="${v.descripcion}">
-                                                        </option>
-                                                    </select>
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label for="id">[[#{reserva.id}]]</label>
+                                                    <label for="cuarto">Tipo de habitación</label>
                                                     <input type="text" class="form-control" 
-                                                           name="id" th:field="*{id}"
+                                                           name="cuarto" th:field="*{cuarto}"
                                                            required="true">
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label for="cliente">[[#{reserva.id.cliente}]]</label>                                    
-                                                    <textarea class="form-control" 
-                                                              th:field="*{cliente}" rows="3"></textarea>
+                                                    <label for="inicio">Fecha de Entrada</label>
+                                                    <input type="date" class="form-control" 
+                                                           name="inicio" th:field="*{inicio}"
+                                                           required="true">
                                                 </div>
-
                                                 <div class="mb-3">
-                                                    <label for="datos">[[#{reserva.datos}]]</label>                                    
-                                                    <input type="text" class="form-control" 
-                                                           th:field="*{datos}" required="true"/>
+                                                    <label for="fin">Fecha de Salida</label>
+                                                    <input type="date" class="form-control" 
+                                                           name="fin" th:field="*{fin}"
+                                                           required="true">
                                                 </div>
-
-                                                <div class="mb-3">
-                                                    <label for="total">[[#{reserva.total}]]</label>                                    
-                                                    <input type="number" class="form-control" 
-                                                           th:field="*{total}" required="true"/>
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-primary" type="submit">Guardar</button>
                                                 </div>
-
-                                                <div class="mb-3">
-                                                    <label for="activo">[[#{reserva.activo}]]</label>
-                                                    <input class="form-check-input" 
-                                                           type="checkbox" 
-                                                           th:field="*{activo}" 
-                                                           id="activo">
-                                                </div>     
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
                     </form>
                 </div>
             </div>
         </section>
-
-        <!-- 5 Fragmento que se utiliza en el fragmento anterior -->
-        <section th:fragment="botonesEditar">
-            <div class="container py-4 mb-4 bg-light">
+        <section th:fragment="listadoReservas" id="reservas">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Listado de Reservas</h4>
+                            </div>
+                            <div th:if="${reservas != null and !reservas.empty}">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th class="text-center">ID Reserva</th>
+                                            <th class="text-center">ID Usuario</th>
+                                            <th class="text-center">Tipo de habitación</th>
+                                            <th class="text-center">Fecha de entrada</th>
+                                            <th class="text-center">Fecha de salida</th>
+                                            <th></th><th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="reserva, contador : ${reservas}">
+                                            <td class="fs-6" th:text="${reserva.idReserva}"></td>
+                                            <td class="fs-6" th:text="${reserva.idUsuario}"></td>
+                                            <td class="fs-6" th:text="${reserva.cuarto}"></td>
+                                            <td class="fs-6" th:text="${reserva.inicio}"></td>
+                                            <td class="fs-6" th:text="${reserva.fin}"></td>
+                                            <td>
+                                                <a th:href="@{/reserva/eliminar/}+${reserva.idReserva}"
+                                                   class="btn btn-danger">
+                                                    <i class="fas fa-trash"></i> Eliminar
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a th:href="@{/reserva/modificar/}+${reserva.idReserva}"
+                                                   class="btn btn-success">
+                                                    <i class="fas fa-pencil"></i> Actualizar
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center p-2" th:if="${reservas == null or reservas.empty}">
+                                <span>No hay reservas registradas</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section th:fragment="editarReserva">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <form method="POST"
+                          th:action="@{/reserva/guardar}" 
+                          th:object="${reserva}"
+                          class="was-validated"                          
+                          enctype="multipart/form-data">
+                        <input type="hidden" name="idReserva" th:field="*{idReserva}"/>
+                        <section th:replace="~{reservas/fragmentos :: botonesEditarReserva}"/>
+                        <div id=details>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h4>Editar Reserva</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="mb-3">
+                                                    <label for="idUsuario">ID Usuario</label>
+                                                    <input type="text" class="form-control" 
+                                                           name="idUsuario" th:field="*{idUsuario}"
+                                                           required="true">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="cuarto">Tipo de habitación</label>
+                                                    <input type="text" class="form-control" 
+                                                           name="cuarto" th:field="*{cuarto}"
+                                                           required="true">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="inicio">Fecha de Entrada</label>
+                                                    <input type="date" class="form-control" 
+                                                           name="inicio" th:field="*{inicio}"
+                                                           required="true">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="fin">Fecha de Salida</label>
+                                                    <input type="date" class="form-control" 
+                                                           name="fin" th:field="*{fin}"
+                                                           required="true">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <section th:fragment="botonesEditarReserva">
+            <div class="container py-4 mb-4">
                 <div class="row">
                     <div class="col-md-4 d-grid">
-                        <a th:href="@{/prereservas/listado}" class="btn btn-primary">
-                            <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+                        <a th:href="@{/reservas/listado}" class="btn btn-primary">
+                            <i class="fas fa-arrow-left"></i> 
                         </a>
                     </div>
                     <div class="col-md-4 d-grid">                                
-                        <a th:href="@{/prereservas/eliminar/}+${prereserva.idPrereserva}"
+                        <a th:href="@{/reserva/eliminar/}+${reserva.idReserva}"
                            class="btn btn-danger">
-                            <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                            <i class="fas fa-trash"></i> 
                         </a>
                     </div>
                     <div class="col-md-4 d-grid">
                         <button type="submit" class="btn btn-success">
-                            <i class="fas fa-check"></i> [[#{accion.guardar}]]
+                            <i class="fas fa-check"></i> 
                         </button>
                     </div>
                 </div>
             </div>
         </section>
-        
     </body>
 </html>
