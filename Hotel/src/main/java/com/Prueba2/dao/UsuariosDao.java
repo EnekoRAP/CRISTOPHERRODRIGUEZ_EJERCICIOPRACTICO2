@@ -5,12 +5,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UsuariosDao extends JpaRepository <Usuarios, Long> {
     
-    Usuarios findByUsername(String nombreUsuario);
+    Usuarios findByUsername(String username);
     
-    Usuarios findByUsernameAndPassword(String nombreUsuario, String contrasena);
-
-    Usuarios findByUsernameOrCorreo(String nombreUsuario, String correo);
-
-    boolean existsByUsernameOrCorreo(String nombreUsuario, String correo);
+    Usuarios findByUsernameAndPassword(String username, String Password);
+    
+    Usuarios findByUsernameOrCorreo(String username, String Correo);
+    
+    boolean existsByUsernameOrCorreo(String username, String Correo);
     
 }
