@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>Hoteles Guanacastecos</title>
+    </head>
+    
+    <body>
+        <!-- 1 Sección para crear el boton de agregar... llamará a una ventana modal-->
+        <section th:fragment="botonesAgregar" class="py-4 mb-4 bg-light">
+            <div class="container" sec:authorize="hasRole('ROLE_ADMIN')">
+                <div class="row">
+                    <div class="col-md-3">   
+                        <button 
+                            type="button" 
+                            class="btn btn-primary btn-block" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#agregarCliente">
+                            <i class="fas fa-plus"></i> [[#{empleados.agregar}]]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2 Fragmento para agregar cliente, es la ventana modal -->
+        <section th:fragment="agregarEmpleados">
+            <div id="agregarEmpleado" 
+                 class="modal fade" 
+                 tabindex="-1" 
+                 aria-labelledby="exampleModalLabel" 
+                 aria-hidden="true">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header bg-info text-white">
+                            <h5 class="modal-title">[[#{empleados.agregar}]]</h5>
+                            <button type="button" 
+                                    class="btn-close" 
+                                    data-bs-dismiss="modal" 
+                                    aria-label="Close"></button>
+                        </div> 
+                        <form th:action="@{/empleados/guardar}" th:object="${empleado}"
+                              method="POST" class="was-validated"
+                              enctype="multipart/form-data">
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="idEmpleado">[[#{empleados.id}]]</label>
+                                    <input type="number" class="form-control" name="idEmpleado" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="nombre">[[#{empleados.nombre}]]</label>
+                                    <input type="text" class="form-control" name="nombre" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="cargo">[[#{empleados.cargo}]]</label>
+                                    <input type="text" class="form-control" name="cargo" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password">[[#{usuario.password}]]</label>
+                                    <input type="password" class="form-control" name="password" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="idHotel">[[#{empleados.id.hotel}]]</label>
+                                    <input type="number" class="form-control" name="number" required="true"/>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" type="submit">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3 Sección principal para mostrar la informaccion de la entidad cliente -->
+        <section th:fragment="listadoEmpleados" id="empleado">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>[[#{empleados.listado}]]</h4></div>
+                            <div th:if="${empleado != null and !empleado.empty}">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr><th>#</th>
+                                            <th>[[#{empleado.id}]]</th>
+                                            <th>[[#{empleado.nombre}]]</th>
+                                            <th></th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="empleado, contador : ${empleado}">
+                                            <td>[[${contador.count}]]</td>
+                                            <td>[[${empleado.cargo}]]</td>
+                                            <td>[[${cliente.id.hotel}]]</td>
+                                            <td sec:authorize="hasRole('ROLE_ADMIN')">
+                                                <a th:href="@{/empleados/eliminar/}+${empleado.idEmpleado}"
+                                                   class="btn btn-danger">
+                                                    <i class="fas fa-trash"></i> [[#{accion.eliminar}]]</a>
+                                                <a th:href="@{/empleados/modificar/}+${empleado.idEmpleado}"
+                                                   class="btn btn-success">
+                                                    <i class="fas fa-pencil"></i> [[#{accion.actualizar}]]</a></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center p-2" th:if="${cliente == null or empleado.empty}">
+                                <span>[[#{lista.vacia}]]</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center bg-success text-white mb-3">
+                            <div class="card-body">
+                                <h3>[[#{empleados.total}]]</h3>
+                                <h4 class="fs-2"><i class="fas fa-users"></i> [[${totalEmpleados}]]</h4>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4 Fragmento que se utiliza en la página modifca.html -->
+        <section th:fragment="editarEmpleados">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <form method="POST"
+                          th:action="@{/empleados/guardar}" th:object="${empleado}"
+                          class="was-validated"
+                          enctype="multipart/form-data">
+                        <input type="hidden" name="idEmpleado" th:field="*{idEmpleado}"/>
+                        <section th:replace="~{empleados/fragmentos :: botonesEditar}"/>
+                        <div id=details>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h4>[[#{accion.actualizar}]]</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="mb-3">
+                                                    <label for="idEmpleado">[[#{empleados.id}]]</label>
+                                                    <input type="number" class="form-control" 
+                                                           name="idEmpleado" th:field="*{idEmpleado}"
+                                                           required="true">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="nombre">[[#{empleados.nombre}]]</label>
+                                                    <input type="text" class="form-control" 
+                                                           name="nombre" th:field="*{nombre}"
+                                                           required="true">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="cargo">[[#{empleados.cargo}]]</label>
+                                                    <input type="text" class="form-control" 
+                                                           name="cargo" th:field="*{cargo}"
+                                                           required="true">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="idHotel">[[#{empleados.id.hotel}]]</label>
+                                                    <input type="number" class="form-control" 
+                                                           name="idHotel" th:field="*{idHotel}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5 Fragmento que se utiliza en el fragmento anterior -->
+        <section th:fragment="botonesEditar">
+            <div class="container py-4 mb-4 bg-light">
+                <div class="row">
+                    <div class="col-md-4 d-grid">
+                        <a th:href="@{/empleados/listado}" class="btn btn-primary">
+                            <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+                        </a>
+                    </div>
+                    <div class="col-md-4 d-grid" sec:authorize="hasRole('ROLE_ADMIN')">                                
+                        <a th:href="@{/empleados/eliminar/}+${empleados.idEmpleado}"
+                           class="btn btn-danger">
+                            <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                        </a>
+                    </div>
+                    <div class="col-md-4 d-grid" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check"></i> [[#{accion.guardar}]]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+    </body>
+</html>
