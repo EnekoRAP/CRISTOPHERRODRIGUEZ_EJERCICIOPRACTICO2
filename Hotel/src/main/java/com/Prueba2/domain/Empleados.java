@@ -28,7 +28,7 @@ public class Empleados implements Serializable {
     private String apellidos;
     private String correo;
     private String telefono;
-    private String NombreUsuario;
+    private String nombreUsuario;
     private String contrasena;
     private int idRolCliente;
     private boolean activo;
