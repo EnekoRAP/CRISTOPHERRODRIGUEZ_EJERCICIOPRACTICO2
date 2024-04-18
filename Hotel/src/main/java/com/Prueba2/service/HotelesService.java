@@ -4,17 +4,15 @@ import com.Prueba2.domain.Hoteles;
 import java.util.List;
 
 public interface HotelesService {
-    
-    public List<Hoteles> getHoteles(boolean activo);
+   
+    public List<Hoteles> getHoteles();
 
-    // Se obtiene un Vuelo, a partir del id de un vuelo
-    public Hoteles getVuelos(Hoteles hoteles);
+ 
+    public Hoteles getHotel(Hoteles hotel);
     
-    // Se inserta un nuevo vuelo si el id del vuelo esta vacío
-    // Se actualiza un vuelo si el id del vuelo NO esta vacío
-    public void save(Hoteles hoteles);
+ 
+    public void save(Hoteles hotel);
     
-    // Se elimina el vuelo que tiene el id pasado por parámetro
-    public void delete(Hoteles hoteles);
-    
+  
+    public void delete(Hoteles hotel);
 }
